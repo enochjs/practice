@@ -1,21 +1,34 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <h1>{{ msg }}</h1>
+  <input type="text" ref="name">
+  <button @click="handleClick">click me</button>
+  <Modal />
 </template>
+
+
+<script>
+import Modal from './components/Modal.vue'
+export default {
+  name: 'App',
+  components: {
+    Modal,
+    Modal
+},
+  data() {
+    return {
+      msg: 'My First Vue 3 App'
+    }
+  },
+  methods: {
+    handleClick() {
+      console.log(this.$refs.name.value)
+      this.$refs.name.classList.add('red1')
+      this.$refs.name.focus()
+    }
+  }
+}
+</script>
 
 <style scoped>
 header {
