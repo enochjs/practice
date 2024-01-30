@@ -5,19 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <style>
+    .box {
+      padding: 100px 0;
+      width: 400px;
+      text-align: center;
+      background: #ddd;
+      margin: 20px;
+      display: inline-block;
+    }
+    .fav {
+      color: red;
+    }
+  </style>
 </head>
 <body>
 
+
   <h1>hello Vue :11）</h1>
   <div id="app">
+    <a :href="url">best website ever</a>
     <div v-if="showBooks">
-      <h2>{{ title }} - {{ author }} - {{ age }}</h2>
+      <h2>
+        <ul>
+          <li v-for="({author}, index) in filteredBooks" :key="author">{{ index }} - {{ author }}</li>
+        </ul>
+      </h2>
+      <ul>
+        <li
+          v-for="book in books"
+          :key="book.id"
+          :class="{ fav: book.favor, fav1: book.favor }"
+          @click="changeFavor(book)"
+        >{{ book.title }}-{{ book.author }}</li>
+      </ul>
     </div>
     <button @click="toggleShowBooks">
       <span v-if="showBooks">Hide Books</span>
       <span v-else>Show Books</span>
     </button>
     <div v-show="showBooks">current showing books</div>
+
+    <br />
+
+    <div class="box" @mouseover="handleEvent($event, 5)">mouseover (enter)</div>
+    <div class="box" @mouseleave="handleEvent">mouseleave</div>
+    <div class="box" @dblClick="handleEvent">double click</div>
   </div>
 
 
