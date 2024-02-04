@@ -104,5 +104,10 @@ nav a:first-of-type {
     padding: 1rem 0;
     margin-top: 1rem;
   }
+  button{
+    width: 100px;
+    height: 48px;
+    display: inline-block;
+  }
 }
 </style>
