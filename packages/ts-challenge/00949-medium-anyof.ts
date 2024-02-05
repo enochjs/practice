@@ -16,4 +16,22 @@ type cases = [
 
 
 // ============= Your Code Here =============
-type AnyOf<T extends readonly any[]> = any
+
+// type AnyOf<T extends readonly any[]> = T[number] extends 0 | '' | false | [] | {} ? false : true
+
+
+type isFalse<T> =
+  T extends '' | 0 | false | undefined | null
+    ? true
+    : Equal<[], T> extends true
+      ? true
+      : Equal<{}, T> extends true
+        ? true
+        : false
+
+type AnyOf<T extends readonly any[]> =
+  T extends [infer F, ...infer Rest]
+    ? isFalse<F> extends true
+      ? AnyOf<Rest>
+      : true
+    : false
