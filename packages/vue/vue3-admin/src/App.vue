@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 </script>
 
 <template>
@@ -15,6 +16,8 @@
         <p class="text-gray-500">You have a new message!</p>
       </div>
     </div>
+    <svg-icon name="icon1" color="red" style="height: 100px; width:100px;"></svg-icon>
+    <svg-icon name="icon2" color="blue"></svg-icon>
   </header>
 
 </template>
