@@ -3,14 +3,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"],
+      "assets/*": ["assets/*"]
     }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "nativewind.d.ts"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", "nativewind.d.ts"]
 }

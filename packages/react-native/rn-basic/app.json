@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "enochjs-rn-basic",
-    "slug": "enochjs-rn-basic",
+    "name": "my-app",
+    "slug": "my-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,25 +13,16 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.enochjs.enochjs-rn-basic"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.enochjs.enochjs-rn-basic"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png",
-      "bundler": "metro"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "410962ec-1002-413f-bd66-8b42fc995d9d"
       }
     },
-    "owner": "enochjs"
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
   }
 }
