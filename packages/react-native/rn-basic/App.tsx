@@ -7,6 +7,8 @@ import BasicImage from '@/basic/Image';
 import BasicTextInput from '@/basic/TextInput';
 import BasicScrollView from '@/basic/ScrollView';
 import BasicStyleSheet from '@/basic/StyleSheet';
+import BasicFlatList from '@/list/flatList';
+import BasicSectionList from '@/list/sectionList';
 
 // Ensure we import the CSS for Tailwind so it's included in hot module reloads.
 const ctx = (require as any).context(
@@ -24,9 +26,11 @@ export default function App() {
       {/* <BasicImage /> */}
       {/* <BasicTextInput /> */}
       {/* <BasicScrollView /> */}
-      <View className="h-full w-full bg-red-400">
+      {/* <View className="h-full w-full bg-red-400">
         <BasicStyleSheet />
-      </View>
+      </View> */}
+      {/* <BasicFlatList /> */}
+      <BasicSectionList />
       <StatusBar style="auto" />
     </View>
   );
