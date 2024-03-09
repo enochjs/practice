@@ -9,6 +9,7 @@ import BasicScrollView from '@/basic/ScrollView';
 import BasicStyleSheet from '@/basic/StyleSheet';
 import BasicFlatList from '@/list/flatList';
 import BasicSectionList from '@/list/sectionList';
+import OtherAlert from '@/others/alert';
 
 // Ensure we import the CSS for Tailwind so it's included in hot module reloads.
 const ctx = (require as any).context(
@@ -30,7 +31,8 @@ export default function App() {
         <BasicStyleSheet />
       </View> */}
       {/* <BasicFlatList /> */}
-      <BasicSectionList />
+      {/* <BasicSectionList /> */}
+      <OtherAlert />
       <StatusBar style="auto" />
     </View>
   );
