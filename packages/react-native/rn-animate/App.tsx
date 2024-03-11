@@ -1,4 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Text, View } from 'react-native';
 import Hello from '@/hello';
 import BasicFirst from '@/basic/first';
@@ -6,6 +7,9 @@ import BasicSecond from '@/basic/animatedStyle';
 import BasicThird from '@/basic/animatedProps';
 import CustomAnimation from '@/basic/customAnimation';
 import ApplyModifiers from '@/basic/applyMOdifiers';
+import TapGesture from '@/gesture/tap';
+import PanGesture from '@/gesture/pan';
+import DecayPan from '@/gesture/decayPan';
 
 // Ensure we import the CSS for Tailwind so it's included in hot module reloads.
 const ctx = (require as any).context(
@@ -17,13 +21,16 @@ if (ctx.keys().length) ctx(ctx.keys()[0]);
 
 export default function App() {
   return (
-    <View className="flex-1 items-center justify-center bg-white">
+    <GestureHandlerRootView className="flex-1 items-center justify-center bg-white">
       {/* <BasicFirst /> */}
       {/* <BasicSecond /> */}
       {/* <BasicThird /> */}
       {/* <CustomAnimation /> */}
-      <ApplyModifiers />
+      {/* <ApplyModifiers /> */}
+      {/* <TapGesture /> */}
+      {/* <PanGesture /> */}
+      <DecayPan />
       <StatusBar style="auto" />
-    </View>
+    </GestureHandlerRootView>
   );
 }
