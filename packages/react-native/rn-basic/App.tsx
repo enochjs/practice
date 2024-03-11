@@ -10,6 +10,7 @@ import BasicStyleSheet from '@/basic/StyleSheet';
 import BasicFlatList from '@/list/flatList';
 import BasicSectionList from '@/list/sectionList';
 import OtherAlert from '@/others/alert';
+import ApiAccessibilityInfo from '@/api/accessibilityInfo';
 
 // Ensure we import the CSS for Tailwind so it's included in hot module reloads.
 const ctx = (require as any).context(
@@ -32,7 +33,8 @@ export default function App() {
       </View> */}
       {/* <BasicFlatList /> */}
       {/* <BasicSectionList /> */}
-      <OtherAlert />
+      {/* <OtherAlert /> */}
+      <ApiAccessibilityInfo />
       <StatusBar style="auto" />
     </View>
   );
