@@ -1,16 +1,10 @@
 import { useState } from "react";
 
 import "./App.css";
-import GridExample from "./sample";
+import GridExample from "@/basic/sample";
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  return (
-    <div className="text-blue-400 font-bold">
-      <GridExample />
-    </div>
-  );
+  return <>{<GridExample />}</>;
 }
 
 export default App;
