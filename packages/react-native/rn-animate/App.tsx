@@ -10,6 +10,8 @@ import ApplyModifiers from '@/basic/applyMOdifiers';
 import TapGesture from '@/gesture/tap';
 import PanGesture from '@/gesture/pan';
 import DecayPan from '@/gesture/decayPan';
+import AnimationsWithTiming from '@/animations/withTiming';
+import AnimationsWithTimingTab from '@/animations/withTimingTab';
 
 // Ensure we import the CSS for Tailwind so it's included in hot module reloads.
 const ctx = (require as any).context(
@@ -29,7 +31,9 @@ export default function App() {
       {/* <ApplyModifiers /> */}
       {/* <TapGesture /> */}
       {/* <PanGesture /> */}
-      <DecayPan />
+      {/* <DecayPan /> */}
+      {/* <AnimationsWithTiming /> */}
+      <AnimationsWithTimingTab />
       <StatusBar style="auto" />
     </GestureHandlerRootView>
   );
