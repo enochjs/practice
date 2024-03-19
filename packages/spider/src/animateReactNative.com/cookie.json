@@ -1,0 +1,56 @@
+[
+    {
+        "domain": ".animatereactnative.com",
+        "expirationDate": 1726531325,
+        "hostOnly": false,
+        "httpOnly": false,
+        "name": "crisp-client%2Fsession%2Fbabe40b8-76e1-40ca-8815-383f2dd4299e",
+        "path": "/",
+        "sameSite": "lax",
+        "secure": false,
+        "session": false,
+        "storeId": "0",
+        "value": "session_0471ff2d-90f5-4b2c-a715-4820f31b2cd0",
+        "id": 1
+    },
+    {
+        "domain": "www.animatereactnative.com",
+        "hostOnly": true,
+        "httpOnly": true,
+        "name": "__Host-next-auth.csrf-token",
+        "path": "/",
+        "sameSite": "lax",
+        "secure": true,
+        "session": true,
+        "storeId": "0",
+        "value": "c008416bd0a641f015f06fae3c123e86189aaa5bf59530e327071b97effba693%7Caac8586be51acfef842d16975eb890a3f1c8a6b71c6b6c714c118f3701cc886e",
+        "id": 2
+    },
+    {
+        "domain": "www.animatereactnative.com",
+        "hostOnly": true,
+        "httpOnly": true,
+        "name": "__Secure-next-auth.callback-url",
+        "path": "/",
+        "sameSite": "lax",
+        "secure": true,
+        "session": true,
+        "storeId": "0",
+        "value": "https%3A%2F%2Fwww.animatereactnative.com",
+        "id": 3
+    },
+    {
+        "domain": "www.animatereactnative.com",
+        "expirationDate": 1713356887.248802,
+        "hostOnly": true,
+        "httpOnly": true,
+        "name": "__Secure-next-auth.session-token",
+        "path": "/",
+        "sameSite": "lax",
+        "secure": true,
+        "session": false,
+        "storeId": "0",
+        "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..kzQrP8C8pChG07cI.J-x31RljMXmM0Jva3YVExbXkA_MHo7wn9INqU1WFQ2s_zk5CXWbY1XsCugTN0WvG_5gn3-0VSXLtvyxM9FtLo7lLfCmWCseelxqSBdv55uS8g7Ye4DwGtk7z7uvUgEPXdR10PpIJpAruxAwA52SvHQ93vnepQTpu9EAwKH_pEoiNr-2SgK5NGhdunleghBEMl6tMRfD2DyJLHdJ1Poj2kucML1vxHtuKUmbfNzvOwApD0Z_lOL-oPtYl8MQsSLkAJPZ0vWklhfqfzljubAzwMMsOFxwUTB2a3C0s2coR9U6cnpknBykBp_69W0uUqGNe2g8QylPL1d88YBYLyli3oX1CePsxceSVP8WAR7Jmzvod-ODSPq7SBPcDjgBkl4XEqQFIQOexMA9e6HA5YRDqYZ1ZH3bBMnxmzGBfZ6L1WOdPe3tZnTkvTJhW9oNLGolvtg3ryQ_6iFB9l4q8jlTUhB8nDZLYn2pfJ7qDWnEF_m-gMpnN01cbnffUubKBm4oK6NRSX52VyJGd.ggNcbug_9szJkVli-PBabg",
+        "id": 4
+    }
+]
