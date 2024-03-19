@@ -56,10 +56,15 @@ export class AnimateReactNative {
   private getAllTabs = async (page: Page, link: string) => {
     await page?.goto(link);
     const selector = 'a.tab';
-
     await page?.waitForSelector(selector, {
       timeout: 10000,
+    }).catch(async (e) => {
+      console.log('====error', e);
+      await page.reload();
+      await this.delay(5000);
+      return this.getAllTabs(page, link);
     });
+
     return page?.$$(selector)
   }
 
@@ -90,6 +95,7 @@ export class AnimateReactNative {
     return `${dirName}/${filename}`;
   }
 
+  // 写文件
   private writeFile = async (filename: string, content: string) => {
     const exist = await fs.access(filename)
       .then(() => true)
@@ -104,6 +110,7 @@ export class AnimateReactNative {
     }
   }
 
+  // check是否已经下载完成
   private checkIsFinished = async (link: string) => {
     const finished = await fs.readFile(path.join(this.rootDir, 'success.json'), 'utf-8');
     const success = JSON.parse(finished);
@@ -113,6 +120,7 @@ export class AnimateReactNative {
     return false;
   }
 
+  // 设置已经下载完成
   private setFinished = async (link: string) => {
     const finished = await fs.readFile(path.join(this.rootDir, 'success.json'), 'utf-8');
     const success = JSON.parse(finished);
@@ -120,11 +128,11 @@ export class AnimateReactNative {
     await fs.writeFile(path.join(this.rootDir, 'success.json'), JSON.stringify(success, null, 2));
   }
 
+  // 获取代码
   private getPageContent = async (page: Page, link: string) => {
     if (await this.checkIsFinished(link)) {
       return;
     }
-    console.log('====link', link);
     await page?.goto(link, {
       timeout: 90000,
     });
@@ -158,8 +166,10 @@ export class AnimateReactNative {
       if (!link) {
         continue;
       }
+      console.log('start page with link: ', link);
       await this.getPageContent(page, link);
-      
     }
+    await browser.close();
+    console.log('===== success all file finished =====');
   }
 }
