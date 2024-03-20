@@ -15,6 +15,8 @@ import AnimationsWithTimingTab from '@/animations/withTimingTab';
 import AnimationsWithSpring from '@/animations/withSpring';
 import AnimationsWithSpringTab from '@/animations/withSpringTab';
 import AnimationsWithDecay from '@/animations/withDecay';
+import AnimationsWithSequence from '@/animations/withSequence';
+import AnimationsWithSequenceWobble from '@/animations/withSequenceWobble';
 
 // Ensure we import the CSS for Tailwind so it's included in hot module reloads.
 const ctx = (require as any).context(
@@ -39,7 +41,9 @@ export default function App() {
       {/* <AnimationsWithTimingTab /> */}
       {/* <AnimationsWithSpring /> */}
       {/* <AnimationsWithSpringTab /> */}
-      <AnimationsWithDecay />
+      {/* <AnimationsWithDecay /> */}
+      {/* <AnimationsWithSequence /> */}
+      <AnimationsWithSequenceWobble />
       <StatusBar style="auto" />
     </GestureHandlerRootView>
   );
