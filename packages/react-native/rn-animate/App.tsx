@@ -14,8 +14,7 @@ import AnimationsWithTiming from '@/animations/withTiming';
 import AnimationsWithTimingTab from '@/animations/withTimingTab';
 import AnimationsWithSpring from '@/animations/withSpring';
 import AnimationsWithSpringTab from '@/animations/withSpringTab';
-import CauseTest from '@/cause/swithPanel';
-import CauseTest2 from '@/cause/carousel-animation-x-and-y-rotation';
+import AnimationsWithDecay from '@/animations/withDecay';
 
 // Ensure we import the CSS for Tailwind so it's included in hot module reloads.
 const ctx = (require as any).context(
@@ -40,8 +39,7 @@ export default function App() {
       {/* <AnimationsWithTimingTab /> */}
       {/* <AnimationsWithSpring /> */}
       {/* <AnimationsWithSpringTab /> */}
-      <CauseTest />
-      {/* <Hello /> */}
+      <AnimationsWithDecay />
       <StatusBar style="auto" />
     </GestureHandlerRootView>
   );
