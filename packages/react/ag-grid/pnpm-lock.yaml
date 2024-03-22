@@ -8,15 +8,30 @@ dependencies:
   '@ag-grid-community/client-side-row-model':
     specifier: ^31.2.0
     version: 31.2.0
+  '@ag-grid-community/core':
+    specifier: ^31.2.0
+    version: 31.2.0
+  '@ag-grid-community/react':
+    specifier: ^31.2.0
+    version: 31.2.0(@ag-grid-community/core@31.2.0)(react-dom@18.2.0)(react@18.2.0)
+  '@ag-grid-enterprise/range-selection':
+    specifier: ^31.2.0
+    version: 31.2.0
   '@ag-grid-enterprise/row-grouping':
     specifier: ^31.2.0
     version: 31.2.0
+  '@ag-grid-enterprise/status-bar':
+    specifier: ^31.2.0
+    version: 31.2.0
+  ag-grid-community:
+    specifier: ^31.2.0
+    version: 31.2.0
   ag-grid-enterprise:
-    specifier: ^31.1.1
-    version: 31.1.1
+    specifier: ^31.2.0
+    version: 31.2.0
   ag-grid-react:
-    specifier: ^31.1.1
-    version: 31.1.1(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^31.2.0
+    version: 31.2.0(react-dom@18.2.0)(react@18.2.0)
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -100,10 +115,30 @@ packages:
       tslib: 2.6.2
     dev: false
 
+  /@ag-grid-community/react@31.2.0(@ag-grid-community/core@31.2.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-lOAoH0c2pGMQqxtEzhzXswf3HLeEVCnDM/TlHJpqKTcydhyW1Cfulr4/uJuZL7h28gLSpLawu+rlGCTgac8NKw==}
+    peerDependencies:
+      '@ag-grid-community/core': 31.2.0
+      react: ^16.3.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.3.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@ag-grid-community/core': 31.2.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /@ag-grid-enterprise/core@31.2.0:
     resolution: {integrity: sha512-YJaTsX10WPMqu9v1BzPgoLEypLVk1nMUcUCKyzaO0yU6920C+i1RaZJvf2fwUy7xTJs0Wb+1VF+ukEh7J6q7Iw==}
     dependencies:
       '@ag-grid-community/core': 31.2.0
+    dev: false
+
+  /@ag-grid-enterprise/range-selection@31.2.0:
+    resolution: {integrity: sha512-SptN7XSkDHqQb65Ar1sJ3UqD8O4Lgc84Azn7ACvnlk8PM4o3RQoEgBKvISCtSnmkwKjlQRv/6L+6rtCXLbqOTw==}
+    dependencies:
+      '@ag-grid-community/core': 31.2.0
+      '@ag-grid-enterprise/core': 31.2.0
     dev: false
 
   /@ag-grid-enterprise/row-grouping@31.2.0:
@@ -111,6 +146,14 @@ packages:
     dependencies:
       '@ag-grid-community/core': 31.2.0
       '@ag-grid-enterprise/core': 31.2.0
+    dev: false
+
+  /@ag-grid-enterprise/status-bar@31.2.0:
+    resolution: {integrity: sha512-CCeWeej4y4xvcNocl52zG0y0hpqFnPsmnRM7eLbRh0WaDT3UOAWfQlPb4GPztXj7ZC++1o0gIo8klxYKfKblqA==}
+    dependencies:
+      '@ag-grid-community/core': 31.2.0
+      '@ag-grid-enterprise/core': 31.2.0
+      tslib: 2.6.2
     dev: false
 
   /@alloc/quick-lru@5.2.0:
@@ -1099,23 +1142,28 @@ packages:
     hasBin: true
     dev: true
 
-  /ag-grid-community@31.1.1:
-    resolution: {integrity: sha512-tiQZ7VQ07yJScTMIQpaYoUMPgiyXMwYDcwTxe4riRrcYGTg0e258XEihoPUZFejR60P1fYWMxdJaR2JUnyhGrg==}
+  /ag-charts-community@9.2.0:
+    resolution: {integrity: sha512-dS5nPExh81owIIdyHli0TvWvSyhmZy2RncM/s3/KXpjAf3eiVN2fxfT2z+QxqsLyoms+fernp5cAuSju0peYXw==}
     dev: false
 
-  /ag-grid-enterprise@31.1.1:
-    resolution: {integrity: sha512-hAy8x+P2KzpRb8RONvCj/FqLL0AJ4FEIEJsEuOEiZAEgi64TAhZv/FzIhIbAElPXf+OhCMKHIAKTD765vzCMOQ==}
+  /ag-grid-community@31.2.0:
+    resolution: {integrity: sha512-Ija6X171Iq3mFZASZlriQIIdEFqA71rZIsjQD6KHy5lMmxnoseZTX2neThBav1gvr6SA6n5B2PD6eUHdZnrUfw==}
+    dev: false
+
+  /ag-grid-enterprise@31.2.0:
+    resolution: {integrity: sha512-qCAtLA3naAMCzhvJkUvRVAc+Lscy5qNGxLNCBAcLSd47YejtpHPEsRZK/WcrJma9k2YImn7372IXixRPOZBL2w==}
     dependencies:
-      ag-grid-community: 31.1.1
+      ag-charts-community: 9.2.0
+      ag-grid-community: 31.2.0
     dev: false
 
-  /ag-grid-react@31.1.1(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-aaDMSP8MGhoXL5M9c4UmhBClRlc3mEMMC0E0/1mhXU6bdiz0QxXT/xQtDe3DFC62VrtXVda9x20Lpj6p6Bfy8g==}
+  /ag-grid-react@31.2.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-ObFdPmF3EC7/xWZX8NjrZjURePyFa72MWjb1ZgUqDP7Wq09OSXXyKBN1qXmfUIT3h4o5+os6tCQEqoo7Op+3ZA==}
     peerDependencies:
       react: ^16.3.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.3.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      ag-grid-community: 31.1.1
+      ag-grid-community: 31.2.0
       prop-types: 15.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
