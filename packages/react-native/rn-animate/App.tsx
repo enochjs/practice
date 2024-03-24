@@ -17,7 +17,10 @@ import AnimationsWithSpringTab from '@/animations/withSpringTab';
 import AnimationsWithDecay from '@/animations/withDecay';
 import AnimationsWithSequence from '@/animations/withSequence';
 import AnimationsWithSequenceWobble from '@/animations/withSequenceWobble';
-import Test from '@/keyboardAvoidView/test';
+// import Test from '@/keyboardAvoidView/test';
+import AnimationsWithRepeat from '@/animations/withRepeat';
+import AnimationsWithRepeatWobble from '@/animations/withRepeatWobble';
+import AnimationsWithDelay from '@/animations/withDelay';
 // import EventEmitter from 'eventemitter3';
 
 // Ensure we import the CSS for Tailwind so it's included in hot module reloads.
@@ -45,7 +48,8 @@ export default function App() {
       {/* <AnimationsWithSpringTab /> */}
       {/* <AnimationsWithDecay /> */}
       {/* <AnimationsWithSequence /> */}
-      <Test />
+      {/* <AnimationsWithRepeat /> */}
+      <AnimationsWithDelay />
       <StatusBar style="auto" />
     </GestureHandlerRootView>
   );
