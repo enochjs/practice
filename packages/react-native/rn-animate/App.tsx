@@ -21,6 +21,9 @@ import AnimationsWithSequenceWobble from '@/animations/withSequenceWobble';
 import AnimationsWithRepeat from '@/animations/withRepeat';
 import AnimationsWithRepeatWobble from '@/animations/withRepeatWobble';
 import AnimationsWithDelay from '@/animations/withDelay';
+import CoreUseSharedValue from '@/core/useSharedValue';
+import CoreUseAnimatedStyle from '@/core/useAnimatedStyle';
+import CoreUseDerivedValue from '@/core/useDerivedValue';
 // import EventEmitter from 'eventemitter3';
 
 // Ensure we import the CSS for Tailwind so it's included in hot module reloads.
@@ -49,7 +52,10 @@ export default function App() {
       {/* <AnimationsWithDecay /> */}
       {/* <AnimationsWithSequence /> */}
       {/* <AnimationsWithRepeat /> */}
-      <AnimationsWithDelay />
+      {/* <AnimationsWithDelay /> */}
+      {/* <CoreUseSharedValue /> */}
+      {/* <CoreUseAnimatedStyle /> */}
+      <CoreUseDerivedValue />
       <StatusBar style="auto" />
     </GestureHandlerRootView>
   );
