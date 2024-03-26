@@ -24,6 +24,8 @@ import AnimationsWithDelay from '@/animations/withDelay';
 import CoreUseSharedValue from '@/core/useSharedValue';
 import CoreUseAnimatedStyle from '@/core/useAnimatedStyle';
 import CoreUseDerivedValue from '@/core/useDerivedValue';
+import CoreCancelAnimation from '@/core/cancelAnimation';
+import ScrollTo from '@/scroll/scrollTo';
 // import EventEmitter from 'eventemitter3';
 
 // Ensure we import the CSS for Tailwind so it's included in hot module reloads.
@@ -37,25 +39,7 @@ if (ctx.keys().length) ctx(ctx.keys()[0]);
 export default function App() {
   return (
     <GestureHandlerRootView className="flex-1 items-center justify-center bg-white">
-      {/* <BasicFirst /> */}
-      {/* <BasicSecond /> */}
-      {/* <BasicThird /> */}
-      {/* <CustomAnimation /> */}
-      {/* <ApplyModifiers /> */}
-      {/* <TapGesture /> */}
-      {/* <PanGesture /> */}
-      {/* <DecayPan /> */}
-      {/* <AnimationsWithTiming /> */}
-      {/* <AnimationsWithTimingTab /> */}
-      {/* <AnimationsWithSpring /> */}
-      {/* <AnimationsWithSpringTab /> */}
-      {/* <AnimationsWithDecay /> */}
-      {/* <AnimationsWithSequence /> */}
-      {/* <AnimationsWithRepeat /> */}
-      {/* <AnimationsWithDelay /> */}
-      {/* <CoreUseSharedValue /> */}
-      {/* <CoreUseAnimatedStyle /> */}
-      <CoreUseDerivedValue />
+      <ScrollTo />
       <StatusBar style="auto" />
     </GestureHandlerRootView>
   );
