@@ -1,0 +1,36 @@
+{
+  "name": "test-tpl",
+  "stages": [
+    {
+      "name": "stage1",
+      "jobs": [
+        {
+          "name": "job1",
+          "jobKey": "PIPELINE_MERGE_REQUEST",
+          "extra": {
+            "key1": "value1"
+          }
+        },
+        {
+          "name": "job2",
+          "jobKey": "PIPELINE_BUILD",
+          "extra": {
+            "key2": "value2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "stage2",
+      "jobs": [
+        {
+          "name": "job1",
+          "jobKey": "PIPELINE_DEPLOY",
+          "extra": {
+            "key3": "value3"
+          }
+        }
+      ]
+    }
+  ]
+}

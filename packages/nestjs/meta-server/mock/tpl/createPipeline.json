@@ -1,0 +1,8 @@
+{
+  "appId": 1,
+  "iterationId": 1,
+  "repoId": 1,
+  "tplId": 1,
+  "branch": "test",
+  "content": "this is a deploy content"
+}
