@@ -1,5 +1,5 @@
 import { InjectQueue, Process, Processor } from '@nestjs/bull';
-import { Inject, Logger } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Job, Queue } from 'bull';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
@@ -22,6 +22,7 @@ import {
   ProcessJobStateChangeDto,
   ProcessStageCreateDto,
 } from '../dto/pipeline.processor.dto';
+import { PipelineLogger } from './utils/pipeline.logger';
 // pipeline 任务处理器，使用redis缓存队列
 // 确保任务能够被执行，任务的状态有：未执行、执行中、执行成功、执行失败
 // 所有的任务都会被加入到 pipeline 队列中，然后由 pipeline 处理器进行处理
@@ -30,8 +31,6 @@ import {
 // 动作 => 任务 => 事件 => 监听器 => 动作
 @Processor('pipeline')
 export class PipelineProcessor {
-  private readonly logger = new Logger(PipelineProcessor.name);
-
   constructor(
     private readonly eventEmitter: EventEmitter2,
     @InjectQueue(PIPELINE_PROCESSOR_NAME)
@@ -41,6 +40,9 @@ export class PipelineProcessor {
     @Inject(CACHE_MANAGER)
     private cacheManager: Cache,
   ) {}
+
+  @Inject()
+  protected readonly logger: PipelineLogger;
 
   addQueue<T>(name: string, data: T) {
     return this.pipelineQueue.add(name, data, {
@@ -58,12 +60,17 @@ export class PipelineProcessor {
   }
 
   private async dispatchStage(data: ProcessDispatchStageDto) {
-    this.logger.log('processor pipeline dispatch stage, %j', data);
+    this.logger.log(`processor pipeline dispatch stage, %j`, data);
     const { tplId, pipelineId } = data;
     const pipeline = await this.pipelineService.getPipeline(pipelineId);
     const tpl = await this.pipelineTplService.findById(tplId);
-    if (!tpl || !pipeline) {
+    if (!pipeline) {
+      this.logger.error('流水线不存在');
+      return;
+    }
+    if (!tpl) {
       this.logger.error('流水线模板或流水线不存在');
+      // TODO send error msg
       return;
     }
     const nextStage = tpl.stages.find((stage) => {

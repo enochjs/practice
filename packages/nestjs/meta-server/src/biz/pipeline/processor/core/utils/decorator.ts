@@ -42,7 +42,7 @@ export const OnEventWrapper = (
   const decoratorFactory = (target: any, key: any, descriptor: any) => {
     const method = descriptor.value;
     // set pipelineId for logger，
-    descriptor.value = async function (payload: any) {
+    descriptor.value = function (payload: any) {
       try {
         asyncLocalStorage.run(payload.pipelineId, async () => {
           try {
@@ -81,7 +81,7 @@ async function handleError(this: BaseListener, payload: any, error: Error) {
     ...error,
     message: error.message,
     stack: error.stack,
-    type: 'job excute error',
+    type: 'job execute error',
     eventname: payload.eventName,
     params: payload,
   });

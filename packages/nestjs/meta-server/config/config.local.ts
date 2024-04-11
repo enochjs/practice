@@ -2,14 +2,14 @@ export default () => {
   return {
     port: 8080,
     mysql: {
-      host: '10.10.0.253',
+      host: '192.168.3.13',
       port: 3306,
       username: 'root',
       password: '123456',
       database: 'lm_meta_sever',
     },
     redis: {
-      host: '10.10.0.253',
+      host: '192.168.3.13',
       port: 6379,
     },
     dingding: {

@@ -19,6 +19,7 @@ import { PipelineJobService } from './processor/core/services/pipeline.job.servi
 import { BuildListener } from './processor/core/listeners/build.listener';
 import { DeployListener } from './processor/core/listeners/deploy';
 import { MergeRequestListener } from './processor/core/listeners/mr.listener';
+import { PipelineLogger } from './processor/core/utils/pipeline.logger';
 @Module({
   imports: [
     UserModule,
@@ -36,6 +37,7 @@ import { MergeRequestListener } from './processor/core/listeners/mr.listener';
   ],
   controllers: [PipelineController, PipelineTplController],
   providers: [
+    PipelineLogger,
     PipelineTplService,
     PipelineProcessor,
     PipelineService,

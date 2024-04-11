@@ -1,5 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { asyncLocalStorage } from '../utils/decorator';
+import { Inject, Injectable } from '@nestjs/common';
 import { PipelineProcessor } from '../pipeline.processor';
 import { RobotService } from '@/core/robot';
 import { UserService } from '@/biz/user/user.service';
@@ -7,21 +6,14 @@ import { PipelineJobService } from '../services/pipeline.job.service';
 import { PipelineService } from '../services/pipeline.service';
 import { PIPELINE_PROCESSOR_ENUM } from '../constants';
 import { CreatePipelineJobDto } from '../../dto/pipeline.job.dto';
+import { PipelineLogger } from '../utils/pipeline.logger';
 
 @Injectable()
 export class BaseListener {
   protected eventName: string;
-  protected readonly logger = new Logger(BaseListener.name);
 
-  public info(...args: any[]) {
-    const pipelineId = asyncLocalStorage.getStore();
-    this.logger.log(`pipelineId=${pipelineId}, %j`, ...args);
-  }
-
-  public log(...args: any[]) {
-    const pipelineId = asyncLocalStorage.getStore();
-    this.logger.log(`pipelineId=${pipelineId}, %j`, ...args);
-  }
+  @Inject()
+  protected readonly logger: PipelineLogger;
 
   @Inject()
   protected readonly pipelineProcessor: PipelineProcessor;
@@ -93,7 +85,7 @@ export class BaseListener {
       PIPELINE_PROCESSOR_ENUM.PROCESS_JOB_STATE_CHANGE,
       {
         pipelineId: pipeline.id,
-        templateId: pipeline.tplId,
+        tplId: pipeline.tplId,
         stageSeq: pipeline.stageSeq,
         success,
         jobKey: jobKey,
