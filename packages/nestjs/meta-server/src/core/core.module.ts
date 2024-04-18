@@ -12,6 +12,7 @@ import pino from 'pino';
 import { randomUUID } from 'crypto';
 import { BullModule } from '@nestjs/bull';
 import { CacheModule } from '@nestjs/cache-manager';
+import { DdService } from './dd/dd.service';
 
 // config module
 const configModule = ConfigModule.forRoot({
@@ -139,10 +140,11 @@ const cacheModule = CacheModule.registerAsync({
     cacheModule,
     bullModuleInst,
   ],
-  providers: [RobotService],
+  providers: [RobotService, DdService],
   exports: [
     configModule,
     RobotService,
+    DdService,
     typeOrmModule,
     ioRedisModule,
     cacheModule,

@@ -23,6 +23,10 @@ import {
   ProcessStageCreateDto,
 } from '../dto/pipeline.processor.dto';
 import { PipelineLogger } from './utils/pipeline.logger';
+import {
+  ProcessFunctionWrapper,
+  ProcessorQueueJobWrapper,
+} from './utils/decorator';
 // pipeline 任务处理器，使用redis缓存队列
 // 确保任务能够被执行，任务的状态有：未执行、执行中、执行成功、执行失败
 // 所有的任务都会被加入到 pipeline 队列中，然后由 pipeline 处理器进行处理
@@ -59,6 +63,7 @@ export class PipelineProcessor {
     this.eventEmitter.emitAsync(`${eventName}${SEPARATION}${status}`, data);
   }
 
+  @ProcessFunctionWrapper
   private async dispatchStage(data: ProcessDispatchStageDto) {
     this.logger.log(`processor pipeline dispatch stage, %j`, data);
     const { tplId, pipelineId } = data;
@@ -94,6 +99,7 @@ export class PipelineProcessor {
     return `pipeline:stage:cache:${pipelineId}:${stageSeq}`;
   };
 
+  @ProcessFunctionWrapper
   private async executeStage(
     data: ProcessDispatchStageDto,
     stage: PipelineTplStage,
@@ -129,6 +135,7 @@ export class PipelineProcessor {
     }
   }
 
+  @ProcessFunctionWrapper
   private async executeJob(
     data: ProcessJobForwardDto,
     eventName: PIPELINE_LISTENER_NAME_ENUM,
@@ -152,6 +159,7 @@ export class PipelineProcessor {
     this.emitEvent(eventName, PIPELINE_BASE_STATUS_ENUM.CREATE, data);
   }
 
+  @ProcessFunctionWrapper
   private async checkStageFinish(data: ProcessJobStateChangeDto) {
     const { pipelineId, tplId, stageSeq, success, jobKey } = data;
     const stageKey = this.generatePipelineStageKey(pipelineId, stageSeq);
@@ -169,8 +177,6 @@ export class PipelineProcessor {
     );
     const tpl = await this.pipelineTplService.findById(tplId);
     this.logger.log('processor pipeline checkStageFinish: tpl=%j', jobResult);
-    const cacheValue = await this.cacheManager.get(stageKey);
-    console.log('=====cacheValue', stageKey, cacheValue);
     const stage = tpl?.stages.find((item) => item.seq === stageSeq);
     await this.cacheManager.set(stageKey, jobResult, 7 * 24 * 60 * 60);
     if (
@@ -188,6 +194,7 @@ export class PipelineProcessor {
 
   // 处理流水线创建事件
   @Process(PIPELINE_PROCESSOR_ENUM.PROCESS_PIPELINE_CREATE)
+  @ProcessorQueueJobWrapper
   async processPipelineCreate(job: Job<CreatePipelineDto>) {
     this.logger.log('processor pipeline create, %j', job.data);
     this.emitEvent(
@@ -199,6 +206,7 @@ export class PipelineProcessor {
 
   // 处理流水线stage创建事件
   @Process(PIPELINE_PROCESSOR_ENUM.PROCESS_STAGE_CREATE)
+  @ProcessorQueueJobWrapper
   async processStageCreate(job: Job<ProcessStageCreateDto>) {
     this.logger.log('processor pipeline create stage, %j', job.data);
     await this.dispatchStage(job.data);
@@ -206,6 +214,7 @@ export class PipelineProcessor {
 
   // 处理流水线执行过程中转发的job事件
   @Process(PIPELINE_PROCESSOR_ENUM.PROCESS_JOB_FORWARD_EVENT)
+  @ProcessorQueueJobWrapper
   async processJobForward(job: Job<ProcessJobForwardDto>) {
     const { data } = job;
     this.logger.log('processor pipeline job forward, %j', data);
@@ -214,6 +223,7 @@ export class PipelineProcessor {
 
   // 处理流水线job状态变更事件
   @Process(PIPELINE_PROCESSOR_ENUM.PROCESS_JOB_STATE_CHANGE)
+  @ProcessorQueueJobWrapper
   async processJobStateChange(job: Job<ProcessJobStateChangeDto>) {
     this.logger.log('processor pipeline job state change, %j', job.data);
     const { pipelineId, tplId, success } = job.data;

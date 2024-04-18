@@ -7,21 +7,70 @@ import {
 import { extendArrayMetadata } from '@nestjs/common/utils/extend-metadata.util';
 import { EVENT_LISTENER_METADATA } from '@nestjs/event-emitter/dist/constants';
 import { BaseListener } from '../listeners/base.listener';
+import { merge } from 'lodash';
+import { Job } from 'bull';
 export const asyncLocalStorage = new AsyncLocalStorage();
 
-// set pipelineId for logger
-export function asyncLocalStorageWrapper(
+async function handleError(this: BaseListener, payload: any, error: Error) {
+  this.logger.log({
+    ...error,
+    message: error.message,
+    stack: error.stack,
+    type: 'job execute error',
+    eventname: payload.eventName,
+    params: payload,
+  });
+  // TODO: send message to robot
+  // await this.pipelineService.sendLinkMessage({
+  //   pipelineId: payload.pipelineId,
+  //   msg: JSON.stringify({
+  //     ...error,
+  //     message: error.message,
+  //     ...payload,
+  //   }),
+  // });
+  this.pipelineProcessor.emitEvent(
+    PIPELINE_LISTENER_NAME_ENUM.PIPELINE,
+    PIPELINE_BASE_STATUS_ENUM.FAILED,
+    payload,
+  );
+}
+
+// wrapper normal function
+export function ProcessFunctionWrapper(
   target: any,
   propertyKey: string,
   descriptor: PropertyDescriptor,
 ) {
   const method = descriptor.value;
-  descriptor.value = async function (payload: any) {
+  descriptor.value = async function (...args: any[]) {
+    const mergeData = merge({}, ...args);
     try {
-      asyncLocalStorage.run(payload.pipelineId, async () => {
-        await method.call(this, payload);
+      return asyncLocalStorage.run(mergeData.pipelineId, async () => {
+        return await method.call(this, ...args);
       });
-    } catch (error) {}
+    } catch (error) {
+      // TODO: send message to robot
+      handleError.call(this, mergeData, error);
+    }
+  };
+}
+
+// wrapper Queue job function
+export function ProcessorQueueJobWrapper(
+  target: any,
+  propertyKey: string,
+  descriptor: PropertyDescriptor,
+) {
+  const method = descriptor.value;
+  descriptor.value = async function (payload: Job<any>) {
+    try {
+      return asyncLocalStorage.run(payload.data?.pipelineId, async () => {
+        return await method.call(this, payload);
+      });
+    } catch (error) {
+      handleError.call(this, payload.data, error);
+    }
   };
 }
 
@@ -44,9 +93,9 @@ export const OnEventWrapper = (
     // set pipelineId for logger，
     descriptor.value = function (payload: any) {
       try {
-        asyncLocalStorage.run(payload.pipelineId, async () => {
+        return asyncLocalStorage.run(payload.pipelineId, async () => {
           try {
-            await method.call(this, payload);
+            return await method.call(this, payload);
           } catch (error) {
             handleError.call(this, payload, error);
           }
@@ -75,28 +124,3 @@ export const OnEventWrapper = (
   decoratorFactory.KEY = EVENT_LISTENER_METADATA;
   return decoratorFactory;
 };
-
-async function handleError(this: BaseListener, payload: any, error: Error) {
-  this.logger.log({
-    ...error,
-    message: error.message,
-    stack: error.stack,
-    type: 'job execute error',
-    eventname: payload.eventName,
-    params: payload,
-  });
-  // TODO: send message to robot
-  // await this.pipelineService.sendLinkMessage({
-  //   pipelineId: payload.pipelineId,
-  //   msg: JSON.stringify({
-  //     ...error,
-  //     message: error.message,
-  //     ...payload,
-  //   }),
-  // });
-  this.pipelineProcessor.emitEvent(
-    PIPELINE_LISTENER_NAME_ENUM.PIPELINE,
-    PIPELINE_BASE_STATUS_ENUM.FAILED,
-    payload,
-  );
-}

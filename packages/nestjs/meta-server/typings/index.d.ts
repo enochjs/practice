@@ -1,6 +1,9 @@
-// declare interface Pagination<T> {
-//   current: number;
-//   pageSize: number;
-//   total: number;
-//   list: T[];
-// }
+declare interface UserInfo {
+  id?: number;
+  roleId?: number;
+  name?: string;
+  mobile?: string;
+  roleName?: string;
+  userId?: number;
+  email?: string;
+}
