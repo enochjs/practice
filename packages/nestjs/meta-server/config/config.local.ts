@@ -21,5 +21,8 @@ export default () => {
       aesToken: '3artlLblIqxzJvSIzjjx11nM2e5tFYXOjBIr',
       approveCode: 'PROC-4B0510AB-C012-4517-9D00-91DC0CAD40AF',
     },
+    git: {
+      webHookToken: 'GR1348941WcXx_424ywTyMSrQy9jU',
+    },
   };
 };

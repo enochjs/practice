@@ -20,7 +20,8 @@ import { BuildListener } from './processor/core/listeners/build.listener';
 import { DeployListener } from './processor/core/listeners/deploy';
 import { MergeRequestListener } from './processor/core/listeners/mr.listener';
 import { PipelineLogger } from './processor/core/utils/pipeline.logger';
-import { PipelineWebhookController } from './webhook/pipeline.webhook.controller';
+import { DdWebhookController } from './webhook/dd.webhook.controller';
+import { GitWebhookController } from './webhook/git.webhook.controller';
 @Module({
   imports: [
     UserModule,
@@ -39,7 +40,8 @@ import { PipelineWebhookController } from './webhook/pipeline.webhook.controller
   controllers: [
     PipelineController,
     PipelineTplController,
-    PipelineWebhookController,
+    DdWebhookController,
+    GitWebhookController,
   ],
   providers: [
     PipelineLogger,

@@ -1,25 +1,17 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Post,
-  Query,
-  Res,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Query, Res } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
 import { DdService } from '@/core/dd/dd.service';
 
-@Controller('api/pipeline')
-export class PipelineWebhookController {
+@Controller('api/pipeline/dd')
+export class DdWebhookController {
   constructor(
     private readonly logger: PinoLogger,
     private readonly ddService: DdService,
   ) {
-    this.logger.setContext(PipelineWebhookController.name);
+    this.logger.setContext(DdWebhookController.name);
   }
 
-  @Post('/dd/callback')
+  @Post('/callback')
   @HttpCode(200)
   async callback(
     @Query() query: { signature: string; timestamp: string; nonce: string },
