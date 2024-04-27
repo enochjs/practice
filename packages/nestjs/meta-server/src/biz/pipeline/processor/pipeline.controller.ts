@@ -9,7 +9,7 @@ import { UserInfo } from '@/core/decorators/user.decorator';
 import { DdService } from '@/core/dd/dd.service';
 
 @ApiTags('Pipeline')
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
 @Controller('api/pipeline')
 export class PipelineController {
   constructor(

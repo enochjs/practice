@@ -9,10 +9,10 @@ export class CreatePipelineJobDto {
   stageSeq: number;
   jobKey: PIPELINE_LISTENER_NAME_ENUM;
   status: PIPELINE_BASE_STATUS_ENUM;
-  createTime?: number;
-  updateTime?: number;
+  createTime?: Date;
+  updateTime?: Date;
   unitKey: string;
-  extra: Record<string, any>;
+  extra?: Record<string, any>;
 }
 
 export class ModifyPipelineJobDto extends PartialType(CreatePipelineJobDto) {

@@ -43,11 +43,11 @@ export class UserDto {
     type: String,
     description: '创建时间',
   })
-  createTime: moment.Moment;
+  createTime: Date;
 
   @ApiProperty({
     type: String,
     description: '更新时间',
   })
-  updateTime: moment.Moment;
+  updateTime: Date;
 }

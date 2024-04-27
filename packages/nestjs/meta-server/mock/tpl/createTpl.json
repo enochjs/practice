@@ -1,8 +1,20 @@
 {
-  "name": "test-tpl",
+  "name": "test-tpl-with-dd-approve",
   "stages": [
     {
       "name": "stage1",
+      "jobs": [
+        {
+          "name": "job2",
+          "jobKey": "PIPELINE_DD_APPROVE",
+          "extra": {
+            "key2": "value2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "stage2",
       "jobs": [
         {
           "name": "job1",
@@ -12,16 +24,16 @@
           }
         },
         {
-          "name": "job2",
+          "name": "job3",
           "jobKey": "PIPELINE_BUILD",
           "extra": {
-            "key2": "value2"
+            "key2": "value3"
           }
         }
       ]
     },
     {
-      "name": "stage2",
+      "name": "stage3",
       "jobs": [
         {
           "name": "job1",

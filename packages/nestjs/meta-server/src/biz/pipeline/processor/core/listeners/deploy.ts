@@ -5,7 +5,6 @@ import {
   PIPELINE_LISTENER_NAME_ENUM,
   PIPELINE_PROCESSOR_ENUM,
 } from '../constants';
-import { CreatePipelineDto } from '../../dto/pipeline.operate.dto';
 import { ListenerWrapper, OnEventWrapper } from '../utils/decorator';
 
 @Injectable()
@@ -16,7 +15,7 @@ export class DeployListener extends BaseListener {
   }
 
   @OnEventWrapper(PIPELINE_BASE_STATUS_ENUM.CREATE)
-  async handleCreate(data: CreatePipelineDto) {
+  async handleCreate(data: any) {
     this.logger.log('come in deploy request', data);
 
     const result = await this.createPipelineJob({

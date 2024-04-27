@@ -1,6 +1,8 @@
 import { CreatePipelineDto } from './pipeline.operate.dto';
-import { PipelineTplJobDto } from '../../tpl/dto/opreate.dto';
-import { PIPELINE_BASE_STATUS_ENUM } from '../core/constants';
+import {
+  PIPELINE_BASE_STATUS_ENUM,
+  PIPELINE_LISTENER_NAME_ENUM,
+} from '../core/constants';
 
 export class ProcessStageCreateDto extends CreatePipelineDto {
   pipelineId: string;
@@ -11,7 +13,8 @@ export class ProcessDispatchStageDto {
   tplId: number;
 }
 
-export class ProcessJobForwardDto extends PipelineTplJobDto {
+export class ProcessJobForwardDto {
+  jobKey: PIPELINE_LISTENER_NAME_ENUM;
   pipelineId: string;
   tplId: number;
   status?: PIPELINE_BASE_STATUS_ENUM;

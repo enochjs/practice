@@ -22,9 +22,9 @@ export class User {
   @Column('tinyint', { comment: '状态', default: USER_STATUS_ENUM.ENABLE })
   status: USER_STATUS_ENUM;
 
-  @Column('int', { comment: '创建时间' })
-  createTime: number;
+  @Column('text', { comment: '创建时间' })
+  createTime: Date;
 
-  @Column('int', { comment: '更新时间' })
-  updateTime: number;
+  @Column('text', { comment: '更新时间' })
+  updateTime: Date;
 }

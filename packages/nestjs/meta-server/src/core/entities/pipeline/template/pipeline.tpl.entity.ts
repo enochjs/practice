@@ -23,11 +23,11 @@ export class PipelineTpl {
 
   @Transform(dateFormat())
   @Column('text', { comment: '创建时间' })
-  createTime: moment.Moment;
+  createTime: Date;
 
   @Transform(dateFormat())
   @Column('text', { comment: '更新时间' })
-  updateTime: moment.Moment;
+  updateTime: Date;
 
   @Expose()
   statusCn() {

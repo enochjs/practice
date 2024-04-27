@@ -38,7 +38,7 @@ export class PipelineService {
     return result;
   }
 
-  async getPipeline(id: string) {
+  async findPipelineById(id: string) {
     const pipeline = await this.pipelineRepository.findOne({ where: { id } });
     return pipeline;
   }

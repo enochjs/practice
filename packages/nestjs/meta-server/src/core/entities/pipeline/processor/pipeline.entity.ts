@@ -23,11 +23,11 @@ export class Pipeline {
 
   @Transform(dateFormat())
   @Column('text', { comment: '创建时间' })
-  createTime: moment.Moment;
+  createTime: Date;
 
   @Transform(dateFormat())
   @Column('text', { comment: '更新时间' })
-  updateTime: moment.Moment;
+  updateTime: Date;
 
   @Column('int', { comment: 'pipeline 状态' })
   status: PIPELINE_BASE_STATUS_ENUM;

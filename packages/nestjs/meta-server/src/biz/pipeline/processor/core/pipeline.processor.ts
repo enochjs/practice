@@ -67,7 +67,7 @@ export class PipelineProcessor {
   private async dispatchStage(data: ProcessDispatchStageDto) {
     this.logger.log(`processor pipeline dispatch stage, %j`, data);
     const { tplId, pipelineId } = data;
-    const pipeline = await this.pipelineService.getPipeline(pipelineId);
+    const pipeline = await this.pipelineService.findPipelineById(pipelineId);
     const tpl = await this.pipelineTplService.findById(tplId);
     if (!pipeline) {
       this.logger.error('流水线不存在');
@@ -145,7 +145,9 @@ export class PipelineProcessor {
       eventName,
       data,
     );
-    const pipeline = await this.pipelineService.getPipeline(data.pipelineId);
+    const pipeline = await this.pipelineService.findPipelineById(
+      data.pipelineId,
+    );
     if (
       pipeline?.status === PIPELINE_BASE_STATUS_ENUM.SUCCESS ||
       pipeline?.status === PIPELINE_BASE_STATUS_ENUM.CANCELED

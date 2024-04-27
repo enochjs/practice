@@ -4,7 +4,11 @@ import { RobotService } from '@/core/robot';
 import { UserService } from '@/biz/user/user.service';
 import { PipelineJobService } from '../services/pipeline.job.service';
 import { PipelineService } from '../services/pipeline.service';
-import { PIPELINE_PROCESSOR_ENUM } from '../constants';
+import {
+  PIPELINE_BASE_STATUS_ENUM,
+  PIPELINE_LISTENER_NAME_ENUM,
+  PIPELINE_PROCESSOR_ENUM,
+} from '../constants';
 import { CreatePipelineJobDto } from '../../dto/pipeline.job.dto';
 import { PipelineLogger } from '../utils/pipeline.logger';
 
@@ -30,7 +34,7 @@ export class BaseListener {
   @Inject()
   protected readonly pipelineJobService: PipelineJobService;
 
-  async createPipelineJob(data: any) {
+  async createPipelineJob(data: CreatePipelineJobDto) {
     const job = await this.pipelineJobService.createJob(data);
     this.logger.log({
       event: data.jobKey,
@@ -41,7 +45,7 @@ export class BaseListener {
 
   async dispatchPipelineJob(data: {
     pipelineId: string;
-    jobKey: string;
+    jobKey: PIPELINE_LISTENER_NAME_ENUM;
     success: boolean;
     pipelineJob?: Partial<CreatePipelineJobDto>;
   }) {
@@ -51,7 +55,7 @@ export class BaseListener {
       jobKey,
       data: data,
     });
-    const pipeline = await this.pipelineService.getPipeline(pipelineId);
+    const pipeline = await this.pipelineService.findPipelineById(pipelineId);
 
     if (!pipeline) {
       this.logger.error({
@@ -61,26 +65,29 @@ export class BaseListener {
       });
       return;
     }
-    // if (pipelineJob) {
-    //   const pipelineJob = await this.pipelineJobService.findByParams({
-    //     pipelineId: pipeline?.id,
-    //     stageSeq: pipeline?.stage,
-    //     jobKey,
-    //   });
-    //   this.logger.log({
-    //     method: 'dispatchPsjs',
-    //     jobKey,
-    //     pipelineJob,
-    //   });
-    //   await this.pipelineJobService.updateJob({
-    //     ...pipelineJob,
-    //     // ...psjsData,
-    //     extra: {
-    //       ...psjs?.extra,
-    //       // ...psjsData?.extra,
-    //     },
-    //   });
-    // }
+    const pipelineJob =
+      await this.pipelineJobService.findByPipelineStageSeqAndJobKey(
+        pipeline.id,
+        pipeline.stageSeq,
+        jobKey,
+      );
+    this.logger.log({
+      method: 'dispatchPipelineJob',
+      jobKey,
+      pipelineJob,
+    });
+    if (!pipelineJob) {
+      this.logger.error('pipeline job not found', data);
+      return;
+    }
+    await this.pipelineJobService.updateJob({
+      ...pipelineJob,
+      ...data.pipelineJob,
+      status: success
+        ? PIPELINE_BASE_STATUS_ENUM.SUCCESS
+        : PIPELINE_BASE_STATUS_ENUM.FAILED,
+    });
+
     await this.pipelineProcessor.addQueue<any>(
       PIPELINE_PROCESSOR_ENUM.PROCESS_JOB_STATE_CHANGE,
       {

@@ -22,8 +22,8 @@ export class UserService {
       name: createDto.name,
       mobile: createDto.mobile,
       status: createDto.status,
-      createTime: moment().unix(),
-      updateTime: moment().unix(),
+      createTime: new Date(),
+      updateTime: new Date(),
       role: createDto.role,
     });
   }

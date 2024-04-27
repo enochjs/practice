@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import axios from 'axios';
 import { PinoLogger } from 'nestjs-pino';
 import configuration from 'config/configuration';
 import {
@@ -8,11 +7,15 @@ import {
   DWClientDownStream,
   EventAck,
 } from '@/core/dd/streamSdk/client';
+
+import { PipelineJobService } from './pipeline.job.service';
+import { PipelineProcessor } from '../pipeline.processor';
 import {
-  RobotMessage,
-  TOPIC_AI_GRAPH_API,
-  TOPIC_ROBOT,
-} from '@/core/dd/streamSdk/constants';
+  PIPELINE_BASE_STATUS_ENUM,
+  PIPELINE_PROCESSOR_ENUM,
+} from '../constants';
+import { ProcessJobForwardDto } from '../../dto/pipeline.processor.dto';
+import { PipelineService } from './pipeline.service';
 
 @Injectable()
 export class PipelineDdService {
@@ -24,6 +27,9 @@ export class PipelineDdService {
     @Inject(configuration.KEY)
     private readonly configService: ConfigType<typeof configuration>,
     private readonly logger: PinoLogger,
+    private readonly pipelineJobService: PipelineJobService,
+    private readonly pipelineProcessor: PipelineProcessor,
+    private readonly pipelineService: PipelineService,
   ) {
     this.logger.setContext(PipelineDdService.name);
     const dd = this.configService.dd;
@@ -32,78 +38,81 @@ export class PipelineDdService {
     this.initClient();
   }
 
+  private async handleBpmsTaskChange(message: DWClientDownStream) {
+    const { data } = message;
+    const { processInstanceId, result } = JSON.parse(data);
+
+    const getStatus = (result: string) => {
+      switch (result) {
+        case 'agree':
+          return PIPELINE_BASE_STATUS_ENUM.SUCCESS;
+        case 'refuse':
+          return PIPELINE_BASE_STATUS_ENUM.FAILED;
+        default:
+          return null;
+      }
+    };
+
+    const status = getStatus(result);
+
+    // 只处理审批通过和审批拒绝
+    if (!status) {
+      return;
+    }
+
+    const pipelineJob =
+      await this.pipelineJobService.findByUnitKey(processInstanceId);
+    this.logger.info('=======pipelineJob, %j', pipelineJob);
+
+    // 只处理由流水线发起的审批
+    if (!pipelineJob) {
+      this.logger.error('=======pipelineJob not found, %j', processInstanceId);
+      return;
+    }
+
+    const pipeline = await this.pipelineService.findPipelineById(
+      pipelineJob.pipelineId,
+    );
+
+    if (!pipeline) {
+      this.logger.error(
+        '=======pipeline not found, %j',
+        pipelineJob.pipelineId,
+      );
+      return;
+    }
+
+    if (status) {
+      await this.pipelineProcessor.addQueue<ProcessJobForwardDto>(
+        PIPELINE_PROCESSOR_ENUM.PROCESS_JOB_FORWARD_EVENT,
+        {
+          pipelineId: pipelineJob.pipelineId,
+          tplId: pipeline.tplId,
+          jobKey: pipelineJob.jobKey,
+          status,
+        },
+      );
+    }
+  }
+
   private initClient() {
     this.client = new DWClient({
       clientId: this.appKey,
       clientSecret: this.appSecret,
     });
 
-    this.client.registerCallbackListener(TOPIC_ROBOT, async (res) => {
-      // 注册机器人回调事件
-      console.log('=====收到消息', res);
-      // const {messageId} = res.headers;
-      const { text, senderStaffId, sessionWebhook } = JSON.parse(
-        res.data,
-      ) as RobotMessage;
-      const body = {
-        at: {
-          atUserIds: [senderStaffId],
-          isAtAll: false,
-        },
-        text: {
-          content:
-            'nodejs-getting-started say : 收到，' + text?.content ||
-            '钉钉,让进步发生',
-        },
-        msgtype: 'text',
-      };
-
-      const accessToken = await this.client.getAccessToken();
-      const result = await axios({
-        url: sessionWebhook,
-        method: 'POST',
-        responseType: 'json',
-        data: body,
-        headers: {
-          'x-acs-dingtalk-access-token': accessToken,
-        },
-      });
-
-      // stream模式下，服务端推送消息到client后，会监听client响应，如果消息长时间未响应会在一定时间内(60s)重试推消息，可以通过此方法返回消息响应，避免多次接收服务端消息。
-      // 机器人topic，可以通过socketCallBackResponse方法返回消息响应
-      if (result?.data) {
-        this.client.socketCallBackResponse(res.headers.messageId, result.data);
-      }
-    });
     this.client
-      .registerCallbackListener(
-        TOPIC_AI_GRAPH_API,
-        async (res: DWClientDownStream) => {
-          // 注册AI插件回调事件
-          console.log('收到ai消息');
-          const { messageId } = res.headers;
-
-          // 添加业务逻辑
-          console.log(res);
-          console.log(JSON.parse(res.data));
-
-          // 通过Stream返回数据
-          this.client.sendGraphAPIResponse(messageId, {
-            response: {
-              statusLine: {
-                code: 200,
-                reasonPhrase: 'OK',
-              },
-              headers: {},
-              body: JSON.stringify({
-                text: '你好',
-              }),
-            },
-          });
-        },
-      )
       .registerAllEventListener((message: DWClientDownStream) => {
-        console.log('=====', message);
+        const { eventType } = message.headers;
+
+        switch (eventType) {
+          case 'bpms_task_change':
+            this.handleBpmsTaskChange(message);
+            break;
+          default:
+            break;
+        }
+
         return { status: EventAck.SUCCESS };
       })
       .connect();

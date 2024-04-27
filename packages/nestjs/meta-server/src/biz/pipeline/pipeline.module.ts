@@ -23,6 +23,7 @@ import { PipelineLogger } from './processor/core/utils/pipeline.logger';
 import { DdWebhookController } from './webhook/dd.webhook.controller';
 import { GitWebhookController } from './webhook/git.webhook.controller';
 import { PipelineDdService } from './processor/core/services/pipeline.dd.service';
+import { DdApproveListener } from './processor/core/listeners/approve.listener';
 @Module({
   imports: [
     UserModule,
@@ -52,6 +53,7 @@ import { PipelineDdService } from './processor/core/services/pipeline.dd.service
     PipelineDdService,
     BaseListener,
     PipelineListener,
+    DdApproveListener,
     BuildListener,
     DeployListener,
     MergeRequestListener,
