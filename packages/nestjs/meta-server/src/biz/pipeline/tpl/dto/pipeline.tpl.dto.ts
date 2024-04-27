@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import moment from 'moment';
 
 export class PipelineTplJobDto {
   @ApiProperty({
