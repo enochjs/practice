@@ -19,7 +19,7 @@ export default () => {
         '5GJcZ-jyS0jqxzp97n1kEtUKA1GuM7wrZlOMKHmkoOx2RXDjFaT83-0x05o3jOrN',
       aesKey: 'bK8w6WtfjboOyB8dd0HNoVR6RbHpASDyLndxDiMtUfy',
       aesToken: '3artlLblIqxzJvSIzjjx11nM2e5tFYXOjBIr',
-      approveCode: 'PROC-4B0510AB-C012-4517-9D00-91DC0CAD40AF',
+      approveCode: 'PROC-2B68950B-C799-40BF-846F-050B2CAA9623',
     },
     git: {
       webHookToken: 'GR1348941WcXx_424ywTyMSrQy9jU',

@@ -1,13 +1,9 @@
-import { Body, Controller, HttpCode, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
-import { DdService } from '@/core/dd/dd.service';
 
 @Controller('api/pipeline/git')
 export class GitWebhookController {
-  constructor(
-    private readonly logger: PinoLogger,
-    private readonly ddService: DdService,
-  ) {
+  constructor(private readonly logger: PinoLogger) {
     this.logger.setContext(GitWebhookController.name);
   }
 

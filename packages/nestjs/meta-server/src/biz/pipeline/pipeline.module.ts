@@ -22,6 +22,7 @@ import { MergeRequestListener } from './processor/core/listeners/mr.listener';
 import { PipelineLogger } from './processor/core/utils/pipeline.logger';
 import { DdWebhookController } from './webhook/dd.webhook.controller';
 import { GitWebhookController } from './webhook/git.webhook.controller';
+import { PipelineDdService } from './processor/core/services/pipeline.dd.service';
 @Module({
   imports: [
     UserModule,
@@ -48,6 +49,7 @@ import { GitWebhookController } from './webhook/git.webhook.controller';
     PipelineTplService,
     PipelineProcessor,
     PipelineService,
+    PipelineDdService,
     BaseListener,
     PipelineListener,
     BuildListener,

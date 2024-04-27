@@ -18,20 +18,7 @@ export class DdWebhookController {
     @Body() body: { encrypt: string },
     @Res() response,
   ) {
-    const msg = this.ddService.decrypt(body.encrypt);
-    switch (msg.EventType) {
-      case 'check_url':
-        const check = this.ddService.getEncryptedMap({
-          timestamp: query.timestamp,
-          nonce: query.nonce,
-          text: 'success',
-        });
-        response.status(200).send(check);
-        return;
-      case 'bpms_task_change':
-        console.log('====come in');
-      default:
-        break;
-    }
+    this.logger.info('收到钉钉回调', query, body);
+    response.send('success');
   }
 }
