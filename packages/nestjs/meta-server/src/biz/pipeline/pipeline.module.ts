@@ -20,7 +20,6 @@ import { BuildListener } from './processor/core/listeners/build.listener';
 import { DeployListener } from './processor/core/listeners/deploy';
 import { MergeRequestListener } from './processor/core/listeners/mr.listener';
 import { PipelineLogger } from './processor/core/utils/pipeline.logger';
-import { DdWebhookController } from './webhook/dd.webhook.controller';
 import { GitWebhookController } from './webhook/git.webhook.controller';
 import { PipelineDdService } from './processor/core/services/pipeline.dd.service';
 import { DdApproveListener } from './processor/core/listeners/approve.listener';
@@ -42,7 +41,6 @@ import { DdApproveListener } from './processor/core/listeners/approve.listener';
   controllers: [
     PipelineController,
     PipelineTplController,
-    DdWebhookController,
     GitWebhookController,
   ],
   providers: [

@@ -13,6 +13,7 @@ import { randomUUID } from 'crypto';
 import { BullModule } from '@nestjs/bull';
 import { CacheModule } from '@nestjs/cache-manager';
 import { DdService } from './dd/dd.service';
+import { GitService } from './git/git.service';
 
 // config module
 const configModule = ConfigModule.forRoot({
@@ -140,11 +141,12 @@ const cacheModule = CacheModule.registerAsync({
     cacheModule,
     bullModuleInst,
   ],
-  providers: [RobotService, DdService],
+  providers: [RobotService, DdService, GitService],
   exports: [
     configModule,
     RobotService,
     DdService,
+    GitService,
     typeOrmModule,
     ioRedisModule,
     cacheModule,

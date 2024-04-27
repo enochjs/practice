@@ -11,7 +11,7 @@ export class CreatePipelineJobDto {
   status: PIPELINE_BASE_STATUS_ENUM;
   createTime?: Date;
   updateTime?: Date;
-  unitKey: string;
+  unitKey?: string;
   extra?: Record<string, any>;
 }
 

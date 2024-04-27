@@ -23,6 +23,9 @@ export default () => {
     },
     git: {
       webHookToken: 'GR1348941WcXx_424ywTyMSrQy9jU',
+      accessToken: 'glpat-Jci19tzGwySRyhP5biqC',
+      api: 'http://10.10.0.253:8092/api/v4',
+      namespaceId: 2,
     },
   };
 };

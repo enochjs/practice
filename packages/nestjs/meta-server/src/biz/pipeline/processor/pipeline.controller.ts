@@ -6,7 +6,7 @@ import { PIPELINE_PROCESSOR_ENUM } from './core/constants';
 import { CreatePipelineDto } from './dto/pipeline.operate.dto';
 import { AuthGuard } from '@/core/guards/auth';
 import { UserInfo } from '@/core/decorators/user.decorator';
-import { DdService } from '@/core/dd/dd.service';
+import { GitService } from '@/core/git/git.service';
 
 @ApiTags('Pipeline')
 @UseGuards(AuthGuard)
@@ -15,7 +15,7 @@ export class PipelineController {
   constructor(
     private readonly logger: PinoLogger,
     private readonly pipelineProcessor: PipelineProcessor,
-    private readonly ddService: DdService,
+    private readonly gitService: GitService,
   ) {
     this.logger.setContext(PipelineController.name);
   }
@@ -38,16 +38,24 @@ export class PipelineController {
   @Get('test')
   async test() {
     this.logger.info('test');
-    const token = await this.ddService.createApproveInstance({
-      appName: 'test',
-      env: 'dev',
-      version: '1.0.0',
-      content: '测试发布',
-      originatorUserId: 'manager1124',
-      approveUserIds: ['manager1124', '056731644026054604'],
-      approveType: 'OR',
+
+    const needMerge = await this.gitService.checkNeedMerge({
+      projectId: 1,
+      targetBranch: 'main',
+      sourceBranch: 'dev',
     });
-    this.logger.info('token', token);
-    return token;
+
+    console.log('=====check', needMerge);
+    if (needMerge) {
+      const result = await this.gitService.createMergeRequest({
+        projectId: 1,
+        targetBranch: 'main',
+        sourceBranch: 'dev',
+      });
+      return result;
+    }
+    // const token = await this.gitService.createMergeRequest(1, 'main', 'dev');
+    // this.logger.info('token', token);
+    return 'not need merge';
   }
 }
