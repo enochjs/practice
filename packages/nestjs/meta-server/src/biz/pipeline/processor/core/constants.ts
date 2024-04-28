@@ -58,3 +58,19 @@ export enum PIPELINE_BASE_STATUS_ENUM {
   // 成功
   SUCCESS = 100,
 }
+
+export enum GIT_MR_STATUS_ENUM {
+  OPENED = 'opened',
+  // 已关闭
+  CLOSED = 'closed',
+  // 锁定
+  LOCKED = 'locked',
+  // check_status
+  CHECK_STATUS = 'check_status',
+  // merge
+  MERGED = 'merged',
+  // not need merge
+  NO_NEED_MERGE = 'no_need_merge',
+  // auto merge
+  AUTO_MERGE = 'auto_merge',
+}

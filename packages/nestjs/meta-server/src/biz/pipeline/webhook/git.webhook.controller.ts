@@ -2,12 +2,22 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
 import { PipelineJobService } from '../processor/core/services/pipeline.job.service';
 import { genGitlabPipelineJobUnitKey } from '../processor/core/utils';
+import { PipelineProcessor } from '../processor/core/pipeline.processor';
+import {
+  GIT_MR_STATUS_ENUM,
+  PIPELINE_BASE_STATUS_ENUM,
+  PIPELINE_PROCESSOR_ENUM,
+} from '../processor/core/constants';
+import { ProcessJobForwardDto } from '../processor/dto/pipeline.processor.dto';
+import { PipelineService } from '../processor/core/services/pipeline.service';
 
 @Controller('api/pipeline/git')
 export class GitWebhookController {
   constructor(
     private readonly logger: PinoLogger,
     private readonly pipelineJobService: PipelineJobService,
+    private readonly pipelineProcessor: PipelineProcessor,
+    private readonly pipelineService: PipelineService,
   ) {
     this.logger.setContext(GitWebhookController.name);
   }
@@ -30,117 +40,45 @@ export class GitWebhookController {
     const pipelineJob = await this.pipelineJobService.findByUnitKey(
       genGitlabPipelineJobUnitKey(project.id, attribute.iid),
     );
-    // const psjs = await this.psjsService.findByParams({
-    //   repoId: project.id,
-    //   iid: attribute.iid,
-    //   jobKey: job_temp_enum.MERGE_REQUEST,
-    // });
-    // this.logger.info(
-    //   `git merge psjs repoId=${project.id}, iid=${attribute.iid}, jobKey=${job_temp_enum.MERGE_REQUEST}, psjs=%j`,
-    //   psjs,
-    // );
-    // if (!psjs) {
-    //   // 非pipeline触发
-    //   const iteration = await this.pipelineService.getIterationByBranch(
-    //     attribute.target_branch,
-    //   );
+    if (!pipelineJob) {
+      return;
+    }
 
-    //   // 分支对应的迭代有绑定自动发布模版
-    //   if (
-    //     iteration &&
-    //     (iteration.status === iteration_status_enum.IN_PROGRESS ||
-    //       iteration.status === iteration_status_enum.NOT_START) &&
-    //     iteration.extra?.autoTemplates &&
-    //     attribute?.state === git_mr_status_enum.MERGED
-    //   ) {
-    //     const tempConfigs: { configId?: number; templateId: number }[] = [];
-    //     iteration.extra?.autoTemplates.forEach((t) => {
-    //       if (t.selected) {
-    //         if (t.configIds?.length) {
-    //           t.configIds.forEach((c) => {
-    //             tempConfigs.push({
-    //               configId: c,
-    //               templateId: t.templateId,
-    //             });
-    //           });
-    //         } else {
-    //           tempConfigs.push({
-    //             templateId: t.templateId,
-    //           });
-    //         }
-    //       }
-    //     });
-    //     tempConfigs?.forEach(async (template, index) => {
-    //       const checkPipeline = await this.pipelineService.getActivePipeline(
-    //         iteration.id,
-    //         template.templateId,
-    //         template.configId,
-    //       );
-    //       if (checkPipeline) {
-    //         await this.pipelineProcessor.addPipelineQueue<PipelineJobEventJob>(
-    //           pipeline_process_dispatch_event_controll,
-    //           {
-    //             eventName: `${job_temp_enum.PIPELINE_STATUS}:${pipeline_status_enum.CANCELED}`,
-    //             pipelineId: checkPipeline.id,
-    //           },
-    //         );
-    //       }
-    //       setTimeout(
-    //         async () => {
-    //           const result =
-    //             await this.pipelineProcessor.addPipelineQueue<PipelineStartJob>(
-    //               pipeline_process_start_controll,
-    //               {
-    //                 iterationId: iteration.id,
-    //                 templateId: template.templateId,
-    //                 configId: template.configId,
-    //                 content: 'auto-deploy',
-    //                 force: false,
-    //                 user: {
-    //                   userId: iteration.owner,
-    //                   name: iteration.ownerName,
-    //                 },
-    //               },
-    //             );
-    //           return result;
-    //         },
-    //         3000 * (index + 1),
-    //       );
-    //     });
-    //   }
-    //   return;
-    // }
+    const pipeline = await this.pipelineService.findPipelineById(
+      pipelineJob.pipelineId,
+    );
 
-    // const job = await this.pipelineService.findJob(
-    //   psjs.pipelineId,
-    //   job_temp_enum.MERGE_REQUEST,
-    // );
+    if (!pipeline) {
+      return;
+    }
 
-    // if (!job) {
-    //   return;
-    // }
-    // if (attribute.state === git_mr_status_enum.MERGED) {
-    //   this.pipelineProcessor.addPipelineQueue<PipelineJobEventJob>(
-    //     pipeline_process_dispatch_event_controll,
-    //     {
-    //       eventName: `${job_temp_enum.MERGE_REQUEST}:${git_mr_status_enum.MERGED}`,
-    //       repoId: project?.id,
-    //       pipelineId: psjs.pipelineId,
-    //       iid: attribute.iid,
-    //     },
-    //   );
-    // }
-    // if (attribute.state === git_mr_status_enum.CLOSED) {
-    //   this.pipelineProcessor.addPipelineQueue<PipelineJobEventJob>(
-    //     pipeline_process_dispatch_event_controll,
-    //     {
-    //       eventName: `${job_temp_enum.MERGE_REQUEST}:${git_mr_status_enum.MERGED}`,
-    //       repoId: project?.id,
-    //       pipelineId: psjs.pipelineId,
-    //       iid: attribute.iid,
-    //     },
-    //   );
-    // }
+    switch (attribute.state) {
+      case GIT_MR_STATUS_ENUM.MERGED:
+        await this.pipelineProcessor.addQueue<ProcessJobForwardDto>(
+          PIPELINE_PROCESSOR_ENUM.PROCESS_JOB_FORWARD_EVENT,
+          {
+            pipelineId: pipelineJob.pipelineId,
+            tplId: pipeline.tplId,
+            jobKey: pipelineJob.jobKey,
+            status: PIPELINE_BASE_STATUS_ENUM.SUCCESS,
+          },
+        );
+        break;
+
+      case GIT_MR_STATUS_ENUM.CLOSED:
+        await this.pipelineProcessor.addQueue<ProcessJobForwardDto>(
+          PIPELINE_PROCESSOR_ENUM.PROCESS_JOB_FORWARD_EVENT,
+          {
+            pipelineId: pipelineJob.pipelineId,
+            tplId: pipeline.tplId,
+            jobKey: pipelineJob.jobKey,
+            status: PIPELINE_BASE_STATUS_ENUM.FAILED,
+          },
+        );
+        break;
+      default:
+        break;
+    }
   }
 
   @Post('/callback')
