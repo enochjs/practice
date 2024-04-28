@@ -39,23 +39,10 @@ export class PipelineController {
   async test() {
     this.logger.info('test');
 
-    const needMerge = await this.gitService.checkNeedMerge({
+    const result = await this.gitService.acceptMergeRequest({
       projectId: 1,
-      targetBranch: 'main',
-      sourceBranch: 'dev',
+      iid: 8,
     });
-
-    console.log('=====check', needMerge);
-    if (needMerge) {
-      const result = await this.gitService.createMergeRequest({
-        projectId: 1,
-        targetBranch: 'main',
-        sourceBranch: 'dev',
-      });
-      return result;
-    }
-    // const token = await this.gitService.createMergeRequest(1, 'main', 'dev');
-    // this.logger.info('token', token);
-    return 'not need merge';
+    return result;
   }
 }

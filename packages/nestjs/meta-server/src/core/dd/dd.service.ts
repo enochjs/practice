@@ -114,7 +114,8 @@ export class DdService {
 
     const approvers =
       new $dingtalkworkflow_1_0.StartProcessInstanceRequestApprovers({
-        actionType: data.approveType,
+        actionType:
+          data.approveUserIds?.length > 1 ? data.approveType : undefined,
         userIds: data.approveUserIds,
       });
 

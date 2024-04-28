@@ -25,7 +25,7 @@ export class DdApproveListener extends BaseListener {
       version: '1.0.0',
       content: '测试发布',
       originatorUserId: 'manager1124',
-      approveUserIds: ['manager1124', '056731644026054604'],
+      approveUserIds: ['manager1124'],
       approveType: 'OR',
     });
 
@@ -56,7 +56,10 @@ export class DdApproveListener extends BaseListener {
 
   @OnEventWrapper(PIPELINE_BASE_STATUS_ENUM.SUCCESS)
   async handleSuccess(data: any) {
-    console.log('====come in merge success====');
+    this.logger.log(
+      'PIPELINE_DD_APPROVE PIPELINE_BASE_STATUS_ENUM.SUCCESS',
+      data,
+    );
     this.dispatchPipelineJob({
       ...data,
       success: true,
@@ -65,7 +68,10 @@ export class DdApproveListener extends BaseListener {
 
   @OnEventWrapper(PIPELINE_BASE_STATUS_ENUM.FAILED)
   async handleFailed(data: any) {
-    console.log('====come in merge failed====');
+    this.logger.log(
+      'PIPELINE_DD_APPROVE PIPELINE_BASE_STATUS_ENUM.FAILED',
+      data,
+    );
     // 写入数据库: 创建流水线
     this.dispatchPipelineJob({
       ...data,

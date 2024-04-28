@@ -53,6 +53,19 @@ export class GitWebhookController {
     }
 
     switch (attribute.state) {
+      case GIT_MR_STATUS_ENUM.OPENED:
+        if (attribute.merge_status === 'cannot_be_merged_recheck') {
+          await this.pipelineProcessor.addQueue<ProcessJobForwardDto>(
+            PIPELINE_PROCESSOR_ENUM.PROCESS_JOB_FORWARD_EVENT,
+            {
+              pipelineId: pipelineJob.pipelineId,
+              tplId: pipeline.tplId,
+              jobKey: pipelineJob.jobKey,
+              status: PIPELINE_BASE_STATUS_ENUM.IN_PROGRESS,
+            },
+          );
+        }
+        break;
       case GIT_MR_STATUS_ENUM.MERGED:
         await this.pipelineProcessor.addQueue<ProcessJobForwardDto>(
           PIPELINE_PROCESSOR_ENUM.PROCESS_JOB_FORWARD_EVENT,

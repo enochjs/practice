@@ -4,7 +4,6 @@ import {
   PIPELINE_BASE_STATUS_ENUM,
   PIPELINE_LISTENER_NAME_ENUM,
   PIPELINE_PROCESSOR_ENUM,
-  SEPARATION,
 } from '../constants';
 import { ListenerWrapper, OnEventWrapper } from '../utils/decorator';
 import { GitService } from '@/core/git/git.service';
@@ -43,6 +42,7 @@ export class MergeRequestListener extends BaseListener {
       targetBranch: 'main',
       sourceBranch: 'dev',
     });
+    this.logger.log('checkNeedMerge', needMerge);
     let mr: any;
     if (needMerge) {
       mr = await this.gitService.createMergeRequest({
@@ -50,7 +50,10 @@ export class MergeRequestListener extends BaseListener {
         targetBranch: 'main',
         sourceBranch: 'dev',
       });
-      console.log('=====createMergeRequest', mr);
+      if (mr.error) {
+        // TODO send dingding message
+      }
+      this.logger.log('create mr error', mr);
     }
 
     const result = await this.createPipelineJob({
@@ -93,10 +96,10 @@ export class MergeRequestListener extends BaseListener {
    */
   @OnEventWrapper(PIPELINE_BASE_STATUS_ENUM.IN_PROGRESS)
   async handleInprogress(data: ProcessJobForwardDto) {
-    console.log('====come in merge inprogress====');
     const pipeline = await this.pipelineService.findPipelineById(
       data.pipelineId,
     );
+    this.logger.log('come in handleInprogress', pipeline);
     if (!pipeline || pipeline.status >= PIPELINE_BASE_STATUS_ENUM.TIMEOUT) {
       return;
     }
@@ -108,23 +111,44 @@ export class MergeRequestListener extends BaseListener {
         data.jobKey,
       );
 
-    if (!pipelineJob || pipelineJob.unitKey) {
+    this.logger.log('come in handleInprogress pipelineJob', pipelineJob);
+
+    if (!pipelineJob || !pipelineJob.unitKey) {
       return;
     }
 
+    const { iid } = parseGitlabPipelineJobUnitKey(pipelineJob.unitKey!);
+    this.logger.log('come in handleInprogress iid', iid);
+
     const mergeInfo = await this.gitService.getMergeRequest({
-      projectId: 1,
-      iid: +pipelineJob!.unitKey!,
+      projectId: pipeline.repoId,
+      iid: iid,
     });
 
+    this.logger.log('come in handleInprogress mergeInfo', mergeInfo);
+
     const status = mergeInfo?.merge_status;
+
+    let timeout: NodeJS.Timeout;
+    const loop = async () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        this.pipelineProcessor.addQueue(
+          PIPELINE_PROCESSOR_ENUM.PROCESS_JOB_FORWARD_EVENT,
+          {
+            ...data,
+            status: PIPELINE_BASE_STATUS_ENUM.IN_PROGRESS,
+          },
+        );
+      }, 5000);
+    };
 
     switch (status) {
       case 'cannot_be_merged':
         // TODO 无法合并，发送钉钉通知给相关人员
+        loop();
         break;
       case 'can_be_merged':
-        const { iid } = parseGitlabPipelineJobUnitKey(pipelineJob.unitKey!);
         const result = await this.gitService.acceptMergeRequest({
           projectId: pipeline.repoId,
           iid: iid,
@@ -141,21 +165,17 @@ export class MergeRequestListener extends BaseListener {
         );
         break;
       default:
-        setTimeout(() => {
-          this.pipelineProcessor.addQueue(
-            PIPELINE_PROCESSOR_ENUM.PROCESS_JOB_FORWARD_EVENT,
-            {
-              ...data,
-              status: PIPELINE_BASE_STATUS_ENUM.IN_PROGRESS,
-            },
-          );
-        }, 5000);
+        loop();
+        break;
     }
   }
 
   @OnEventWrapper(PIPELINE_BASE_STATUS_ENUM.SUCCESS)
   async handleSuccess(data: any) {
-    console.log('====come in merge success====');
+    this.logger.log(
+      'PIPELINE_MERGE_REQUEST PIPELINE_BASE_STATUS_ENUM.SUCCESS',
+      data,
+    );
     this.dispatchPipelineJob({
       ...data,
       success: true,
@@ -164,8 +184,10 @@ export class MergeRequestListener extends BaseListener {
 
   @OnEventWrapper(PIPELINE_BASE_STATUS_ENUM.FAILED)
   async handleFailed(data: any) {
-    console.log('====come in merge failed====');
-    // 写入数据库: 创建流水线
+    this.logger.log(
+      'PIPELINE_MERGE_REQUEST PIPELINE_BASE_STATUS_ENUM.FAILED',
+      data,
+    );
     this.dispatchPipelineJob({
       ...data,
       success: false,
