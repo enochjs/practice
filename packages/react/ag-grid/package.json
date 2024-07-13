@@ -19,6 +19,7 @@
     "ag-grid-community": "^31.2.0",
     "ag-grid-enterprise": "^31.2.0",
     "ag-grid-react": "^31.2.0",
+    "ahooks": "^3.8.0",
     "antd": "^5.19.1",
     "lightgallery": "^2.7.2",
     "react": "^18.2.0",
