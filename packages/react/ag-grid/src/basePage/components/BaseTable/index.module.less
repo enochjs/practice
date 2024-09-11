@@ -1,0 +1,68 @@
+.spin_wrap {
+  width: 100%;
+  height: 100%;
+}
+
+.card_table_box {
+  width: 100%;
+  height: 100%;
+  padding: 0 12px;
+}
+
+:global {
+  .ant-spin-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+}
+
+.customCheck {
+  position: relative;
+  user-select: none;
+  .customCheckText {
+    padding: 5px 10px;
+    background: #f5f6fa;
+    border-radius: 8px;
+  }
+  .defaultText {
+    padding: 5px 10px;
+  }
+  .defaultText {
+    padding: 5px 10px;
+  }
+  .selectedWrapper {
+    position: absolute;
+    bottom: 100%;
+    left: 90px;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 20;
+    background: #fff;
+    border-radius: var(--ant-modal-radius-base, 8px);
+    padding: 8px;
+    margin-bottom: 4px;
+    box-shadow: 4px 4px 16px 0px rgba(19, 21, 35, 0.08);
+  }
+}
+
+.customCheck {
+  position: relative;
+  user-select: none;
+
+  .selectedWrapper {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    max-height: 400px;
+    overflow: auto;
+    z-index: 20;
+    background: #fff;
+    border-radius: var(--ant-modal-radius-base, 16px);
+    padding: 8px;
+    box-shadow: 4px 4px 16px 0px rgba(19, 21, 35, 0.08);
+  }
+}
+
+.extend_column {
+}

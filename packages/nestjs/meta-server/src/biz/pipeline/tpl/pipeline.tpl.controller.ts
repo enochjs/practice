@@ -40,6 +40,9 @@ export class PipelineTplController {
   }
 
   @Get('detail/:id')
+  @ApiOkResponse({
+    type: PipelineTplDto,
+  })
   async detail(@Query('id') id: number) {
     const result = await this.pipelineTplService.findById(id);
     this.logger.info('detail', result);

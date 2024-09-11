@@ -78,6 +78,7 @@ const loggerModuleInst = LoggerModule.forRootAsync({
           res.setHeader('x-request-id', id);
           return id;
         },
+        // tood
         stream: pino.destination({
           dest: 'stdout',
           sync: false, // Asynchronous logging

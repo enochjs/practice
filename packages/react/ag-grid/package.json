@@ -13,6 +13,7 @@
     "@ag-grid-community/client-side-row-model": "^31.2.0",
     "@ag-grid-community/core": "^31.2.0",
     "@ag-grid-community/react": "^31.2.0",
+    "@ag-grid-enterprise/core": "^32.0.2",
     "@ag-grid-enterprise/range-selection": "^31.2.0",
     "@ag-grid-enterprise/row-grouping": "^31.2.0",
     "@ag-grid-enterprise/status-bar": "^31.2.0",
@@ -22,8 +23,10 @@
     "ahooks": "^3.8.0",
     "antd": "^5.19.1",
     "lightgallery": "^2.7.2",
+    "linkmore-design": "^3.0.38",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@types/node": "^20.11.26",

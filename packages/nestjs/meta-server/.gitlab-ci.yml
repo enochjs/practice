@@ -1,0 +1,17 @@
+image: node:21-alpine3.18
+
+variables:
+  GIT_CLEAN_FLAGS: -x -f -e node_modules/**
+
+stages:
+  - deploy
+
+deployWeapp:
+  stage: deploy
+  cache:
+    paths:
+      - .yarn-cache/
+  script:
+    - yarn install --cache-folder .yarn-cache
+    - yarn run build:weapp:ci
+    - node -e "var {uploader} = require('/workspace/node_modules/@hd/wx-uploader');uploader()"

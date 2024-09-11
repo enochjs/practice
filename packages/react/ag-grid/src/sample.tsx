@@ -1,6 +1,6 @@
 import { ColDef } from "ag-grid-enterprise";
 import { AgGridReact } from "ag-grid-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Row Data Interface
 interface IRow {
@@ -30,13 +30,23 @@ const GridExample = () => {
     { field: "electric" },
   ]);
 
+  useEffect(() => {
+    console.log("=====ccc");
+  }, []);
+
   // Container: Defines the grid's theme & dimensions.
   return (
     <div
       className={"ag-theme-quartz"}
       style={{ width: "100%", height: "500px" }}
     >
-      <AgGridReact rowData={rowData} columnDefs={colDefs} />
+      <AgGridReact
+        rowData={rowData}
+        columnDefs={colDefs}
+        onGridReady={() => {
+          console.log("===ready");
+        }}
+      />
     </div>
   );
 };

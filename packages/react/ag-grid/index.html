@@ -18,5 +18,56 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script type="text/javascript">
+      function downloadJSAtOnload() {
+        const cssAssets = [
+          "https://cdn-static.scm321.com/public/print-stimulsoft/stimulsoft.designer.office2013.whiteblue.css",
+          "https://cdn-static.scm321.com/public/print-stimulsoft/stimulsoft.viewer.office2013.whiteblue.css",
+        ];
+        const jsAssets = [
+          "https://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js",
+          // 'https://cdn-static.scm321.com/public/print-stimulsoft/stimulsoft.reports.pack.js?rnd=1',
+          // 'https://cdn-static.scm321.com/public/print-stimulsoft/stimulsoft.viewer.pack.js?rnd=1',
+          // 'https://cdn-static.scm321.com/public/print-stimulsoft/stimulsoft.designer.pack.js?rnd=1',
+          "https://cdn-static.scm321.com/public/print-stimulsoft-test-version/stimulsoft.reports.pack.js?rnd=1",
+          "https://cdn-static.scm321.com/public/print-stimulsoft-test-version/stimulsoft.viewer.pack.js?rnd=1",
+          "https://cdn-static.scm321.com/public/print-stimulsoft-test-version/stimulsoft.designer.pack.js?rnd=1",
+        ];
+        // const fonts = [
+        //   'https://cdn-static.scm321.com/public/print/microsoft_yahei.ttf',
+        //   'https://cdn-static.scm321.com/public/print/NSimSun.ttf',
+        // ];
+        cssAssets.forEach(function (item) {
+          let link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.src = item;
+          link.crossOrigin = "anonymous";
+          document.head.appendChild(link);
+        });
+
+        jsAssets.forEach(function (item, index) {
+          let script = document.createElement("script");
+          script.src = item;
+          script.crossOrigin = "anonymous";
+          // 设置async为false， 保证执行顺序
+          script.async = false;
+          document.head.appendChild(script);
+        });
+
+        // fonts.forEach(function (item) {
+        //   let link = document.createElement('link');
+        //   link.rel = 'preload';
+        //   link.as = 'font';
+        //   link.href = item;
+        //   link.crossOrigin = 'anonymous';
+        //   document.head.appendChild(link);
+        // });
+      }
+      if (window.addEventListener)
+        window.addEventListener("load", downloadJSAtOnload, false);
+      else if (window.attachEvent)
+        window.attachEvent("onload", downloadJSAtOnload);
+      else window.onload = downloadJSAtOnload;
+    </script>
   </body>
 </html>
